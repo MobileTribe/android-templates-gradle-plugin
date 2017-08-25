@@ -46,7 +46,7 @@ class TemplateCreatorTask extends DefaultTask {
         if (!templateName) {
             throw new IllegalStateException("templateName should be defined in ${this.name}")
         }
-        File outputDir = project.file('build/templates/' + templateName)
+        File outputDir = new File(project.buildDir, "/templates/generated/$templateName")
         return outputDir
     }
 
