@@ -59,9 +59,7 @@ abstract class AbstractIntegrationTest {
         ProjectConnection connection = GradleConnector.newConnector()
                 .forProjectDirectory(workingDirectory)
                 .connect()
-        Properties props = new Properties()
-        props.load(new FileInputStream(new File(TestUtils.getPluginBaseDir(), "../version.properties")))
-        def versionPlugin = props.getProperty('version')
+        String versionPlugin = getPluginVersion()
 
 
         try {
@@ -77,5 +75,12 @@ abstract class AbstractIntegrationTest {
         } finally {
             connection.close()
         }
+    }
+
+    protected String getPluginVersion() {
+        Properties props = new Properties()
+        props.load(new FileInputStream(new File(TestUtils.getPluginBaseDir(), "../version.properties")))
+        def versionPlugin = props.getProperty('version')
+        versionPlugin
     }
 }

@@ -62,7 +62,6 @@ if (file('extra.gradle').exists()) {
 
 def zipTemplatesTask = project.tasks.getByName("zipTemplates")
 task buildTemplate(type: DeliveryBuild, dependsOn: zipTemplatesTask) {
-    variantName = 'templates'
+    variantName = templates.templatesName
     outputFiles = ["templates": zipTemplatesTask.outputs.files.singleFile]
 }
-//project.tasks.withType(Zip).findAll {it.group=="template"}. collect {it.outputs.files.singleFile}

@@ -1,5 +1,6 @@
 package com.leroymerlin.plugins.test.integration
 
+import com.leroymerlin.plugins.TemplatesPlugin
 import org.junit.Assert
 import org.junit.Test
 
@@ -33,10 +34,46 @@ class AndroidTest extends AbstractIntegrationTest {
 
 
     @Test
-    void testDelivery() {
+    void testSaveWithDelivery() {
         addTemplateFragment();
         testTask('install')
     }
+
+    @Test
+    void testInstallAndUninstallTemplate() {
+        addTemplateFragment()
+        Assert.assertFalse(new File(TemplatesPlugin.findAndroidStudioFolder(), "templatesTest").exists())
+
+        testTask('installTemplates')
+        Assert.assertTrue(new File(TemplatesPlugin.findAndroidStudioFolder(), "templatesTest").exists())
+
+        testTask('uninstallTemplates')
+        Assert.assertFalse(new File(TemplatesPlugin.findAndroidStudioFolder(), "templatesTest").exists())
+    }
+
+    @Test
+    void testInstallDependencyTemplate() {
+       testSaveWithDelivery()
+
+        applyExtraGradle('''
+        repositories{
+            mavenLocal()
+        }
+        dependencies{
+            template 'com.leroymerlin.templates:templatestest:''' + getPluginVersion() + ''':templates'
+        }
+''')
+        Assert.assertFalse(new File(TemplatesPlugin.findAndroidStudioFolder(), "templatesTest").exists())
+
+
+        testTask('installTemplates')
+        Assert.assertTrue(new File(TemplatesPlugin.findAndroidStudioFolder(), "templatesTest").exists())
+
+        testTask('uninstallTemplates')
+        Assert.assertFalse(new File(TemplatesPlugin.findAndroidStudioFolder(), "templatesTest").exists())
+
+    }
+
 
     private addTemplateFragment() {
         applyExtraGradle('''
@@ -83,6 +120,7 @@ class AndroidTest extends AbstractIntegrationTest {
                 }
             }
         }
+        
 
 ''')
     }
