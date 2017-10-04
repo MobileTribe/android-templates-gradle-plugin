@@ -54,7 +54,7 @@ class TemplatesPluginTest {
             template('PandroidFragmentTest'){
                 description = "Creates a new basic PandroidFragment with a presenter."
                 javaFiles = project.fileTree(templatesJava).include('fragment/*.java')
-                resourceFiles = project.files(new File(templatesFolder.path ,"res/layout/fragment_base.xml"))
+                resFiles = project.files(new File(templatesFolder.path ,"res/layout/fragment_base.xml"))
                 parameters {
                     fragmentClass {
                         replace = "${fragmentClassName}Fragment"

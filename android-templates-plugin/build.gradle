@@ -5,9 +5,6 @@ delivery {
     archiveRepositories = project.ext.properties.containsKey('bintrayRepositories') ? project.ext.bintrayRepositories : {}
 }
 
-
-
-
 repositories {
     mavenCentral()
 }

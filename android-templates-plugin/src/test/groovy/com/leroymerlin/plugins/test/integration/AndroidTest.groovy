@@ -84,13 +84,12 @@ class AndroidTest extends AbstractIntegrationTest {
             template('PandroidFragmentTest'){
                 description = "Creates a new basic PandroidFragment with a presenter."
                 javaFiles = fileTree(templatesJava).include('fragment/*.java')
-                resourceFiles = files(new File(templatesFolder.path ,"res/layout/fragment_base.xml"))
+                resFiles = files(new File(templatesFolder.path ,"res/layout/fragment_base.xml"))
                 parameters {
                     fragmentClass {
                         replace = "${fragmentClassName}Fragment"
                         label = "Fragment Name"
                         constraints = "class|unique|nonempty"
-                        suggest = 'fragment_${classToResource(fragmentClass)}\'
                         help = "The name of the fragment class to create"
                     }
 

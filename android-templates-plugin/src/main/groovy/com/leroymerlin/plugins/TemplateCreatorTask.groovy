@@ -8,6 +8,7 @@ import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
@@ -26,10 +27,12 @@ class TemplateCreatorTask extends DefaultTask {
     String formfactor = "Mobile"
 
     @InputFiles
+    @Optional
     FileCollection javaFiles
 
-    @Input
-    FileCollection resourceFiles
+    @InputFiles
+    @Optional
+    FileCollection resFiles
 
     @Input
     String minSdk = "17"
@@ -74,7 +77,14 @@ class TemplateCreatorTask extends DefaultTask {
 
         javaFiles?.each { copyFile(it, new File(outputDir, "root/src/app_package/" + it.name + ".ftl")) }
 
-        resourceFiles?.each { copyFile(it, new File(outputDir, "root/src/app_package/" + it.name + ".ftl")) }
+        resFiles?.each {
+            if (it.name.contains("AndroidManifest")) {
+                copyFile(it, new File(outputDir, "root/AndroidManifest.xml.ftl"))
+            } else {
+                def resFolder = it.parentFile
+                copyFile(it, new File(outputDir, "root/" + resFolder.parentFile.name + "/" + resFolder.name + "/" + it.name + ".ftl"))
+            }
+        }
     }
 
 
@@ -113,12 +123,15 @@ import ${applicationPackage}.''' + className + ''';
                     }
                     instantiate(from: 'root/src/app_package/' + file.name + ".ftl", to: path)
                 }
-                resourceFiles?.each { file ->
-                    def path = '${escapeXmlAttribute(resOut)}/' + file.parentFile.name + "/" + replaceString(file.name)
-                    if (!openFile) {
-                        openFile = path
+                resFiles?.each { file ->
+                    if (file.name.contains("AndroidManifest")) {
+                        def path = '${escapeXmlAttribute(manifestOut)}/AndroidManifest.xml'
+                        merge(from: 'root/' + file.name + ".ftl", to: path)
+                    } else {
+                        def path = '${escapeXmlAttribute(resOut)}/' + file.parentFile.name + "/" + replaceString(file.name)
+                        merge(from: 'root/res/' + file.parentFile.name + '/' + file.name + ".ftl", to: path)
+
                     }
-                    instantiate(from: 'root/res/' + file.parentFile.name + '/' + file.name, to: path)
                 }
                 if (openFile) {
                     open(file: openFile)
@@ -146,7 +159,8 @@ import ${applicationPackage}.''' + className + ''';
                             name: it.label,
                             type: 'string',
                             constraints: it.constraints,
-                            default: it.suggest,
+                            suggest: it.suggest,
+                            default: it.defaultValue,
                             help: it.help)
                 }
 
@@ -187,6 +201,7 @@ class ParameterData {
     String label;
     String replace;
     String constraints = "";
+    String defaultValue = "";
     String suggest = "";
     String help = "";
     String value
