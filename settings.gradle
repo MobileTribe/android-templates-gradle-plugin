@@ -1,2 +1,3 @@
 include 'android-templates-plugin'
+include 'android-templates-doc'
 

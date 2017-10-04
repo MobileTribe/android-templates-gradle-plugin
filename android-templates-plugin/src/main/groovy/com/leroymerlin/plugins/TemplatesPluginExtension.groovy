@@ -8,16 +8,11 @@ import org.gradle.api.Project
 class TemplatesPluginExtension {
 
     Project project
+    String templatesName
 
-
-
-    private String mTemplatesName
-    String setTemplatesName(String templateName){
-        this.templateName = mTemplatesName
-    }
     String getTemplatesName() {
-        if(mTemplatesName){
-            return mTemplatesName
+        if(templatesName){
+            return templatesName
         }
         return project.hasProperty('projectName') ? project.projectName : project.name
     }

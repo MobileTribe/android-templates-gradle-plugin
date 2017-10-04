@@ -1,0 +1,39 @@
+include::./Header.adoc[]
+
+
+## Create a template
+
+
+### Configure templates extension
+
+Once the plugin apply on your project you can configure the template extension
+
+[source,groovy]
+----
+include::{pluginTestDir}groovy/com/leroymerlin/plugins/test/TemplatesPluginTest.groovy[tags=template]
+----
+
+### Build it
+
+To build your template you can use one of those gradle function
+
+- *zipTemplates* - create a zip file with your templates
+- *installTemplates* - install the zipFile in your android studio
+- *uninstallTemplates* - uninstall the templates from your computeur
+
+NOTE: if your android studio installation is not at a standard location you can set
+the installation path with environment variable *ANDROID_STUDIO_HOME*
+
+
+## Use your template
+
+
+To use a publish template you can apply the plugin on your project and add the dependency
+
+For example with a maven template
+[source,groovy]
+----
+dependencies {
+    template 'com.leroymerlin.templates:mytemplates:1.0.0'
+}
+----

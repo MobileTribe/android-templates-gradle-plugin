@@ -21,7 +21,7 @@ class TemplateCreatorTask extends DefaultTask {
     String description = ""
 
     @Input
-    String category = "Pandroid"
+    String category = "Custom"
 
     @Input
     String formfactor = "Mobile"

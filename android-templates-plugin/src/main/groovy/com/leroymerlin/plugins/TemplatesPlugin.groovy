@@ -13,7 +13,7 @@ import java.util.zip.ZipFile
  */
 class TemplatesPlugin implements Plugin<Project> {
 
-    public static final String GROUP = 'template'
+    public static final String GROUP = 'templates'
 
     Project project
     TemplatesPluginExtension templatesExtension;
@@ -45,7 +45,7 @@ class TemplatesPlugin implements Plugin<Project> {
         }
 
 
-        def uninstallTemplatesTask = project.task("uninstallTemplates").doLast {
+        def uninstallTemplatesTask = project.task("uninstallTemplates", group: GROUP).doLast {
             if (!project.tasks.withType(TemplateCreatorTask).isEmpty()){
                 uninstallTemplates(templatesExtension.templatesName)
             }
@@ -53,7 +53,7 @@ class TemplatesPlugin implements Plugin<Project> {
                 uninstallTemplates(getTemplatesProperties(it).getProperty("name"))
             }
         }
-        project.task("installTemplates", dependsOn: [uninstallTemplatesTask, zipAllTask]).doLast {
+        project.task("installTemplates", dependsOn: [uninstallTemplatesTask, zipAllTask], group: GROUP).doLast {
             if (!project.tasks.withType(TemplateCreatorTask).isEmpty()) {
                 installTemplates(templatesExtension.templatesName, zipAllTask.outputs.files.singleFile, project.version.toString())
             }
