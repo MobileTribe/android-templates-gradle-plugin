@@ -1,5 +1,5 @@
 :htmlPath:
-ifdef::env-github[:htmlPath: http://mobiletribe.github.io/android-templates/]
+ifdef::env-github[:htmlPath: http://mobiletribe.github.io/android-templates-gradle-plugin/]
 
 = Android templates plugin
 :hardbreaks:
@@ -40,7 +40,7 @@ apply plugin: 'com.leroymerlin.android-templates'
 
 ## Here we go!
 
-To learn how to use the library, please read link:{htmlPath}android-templates-doc/html/Tutorial.html[tutorial part] of this wiki. +
+To learn how to use the library, please read link:{htmlPath}android-templates-doc/html/Tutorial.html[tutorial part] of this wiki.
 
 ## Partner
 
