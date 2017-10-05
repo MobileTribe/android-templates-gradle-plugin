@@ -54,7 +54,7 @@ class TemplatesPluginTest {
         project.
         //tag::template[]
                 templates {
-                    //define the folder in which install the files
+                    //define the folder where the files will be installed
                     templatesName "myCustomTemplates"
                     //create a new template named PandroidFragmentTest
                     template('PandroidFragmentTest') {
@@ -84,7 +84,7 @@ class TemplatesPluginTest {
                             layoutName {
                                 //value to remplace in source files
                                 replace = 'fragment_base'
-                                //user label to display. If not set the variable won't be visible
+                                //user label to display. If not set, the variable won't be visible
                                 label = "Layout Name"
                                 //template constraint. See existing template
                                 constraints = "layout|unique|nonempty"
@@ -99,7 +99,7 @@ class TemplatesPluginTest {
                                 replace = 'com.leroymerlin.templates'
                                 label = "Package Name"
                                 constraints = "package"
-                                help = "The name of the layout to create for the fragment"
+                                help = "The package name of the fragment"
                             }
 //end::template[]
                             openerClass {

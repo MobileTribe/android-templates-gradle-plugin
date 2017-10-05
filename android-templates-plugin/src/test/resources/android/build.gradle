@@ -59,9 +59,10 @@ if (file('extra.gradle').exists()) {
     apply from: 'extra.gradle'
 }
 
-
+//tag::delivery[]
 def zipTemplatesTask = project.tasks.getByName("zipTemplates")
 task buildTemplate(type: DeliveryBuild, dependsOn: zipTemplatesTask) {
     variantName = templates.templatesName
     outputFiles = ["templates": zipTemplatesTask.outputs.files.singleFile]
 }
+//end::delivery[]
