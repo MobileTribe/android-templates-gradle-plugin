@@ -60,7 +60,7 @@ class AndroidTest extends AbstractIntegrationTest {
             mavenLocal()
         }
         dependencies{
-            template 'com.leroymerlin.templates:templatestest:''' + getPluginVersion() + ''':templates'
+            template 'com.leroymerlin.templates:templatestest:''' + getTestVersion() + ''':templates'
         }
 ''')
         Assert.assertFalse(new File(TemplatesPlugin.findAndroidStudioFolder(), "templatesTest").exists())

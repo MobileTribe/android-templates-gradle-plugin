@@ -48,7 +48,7 @@ abstract class AbstractIntegrationTest {
     void tearDown() {
         Thread.sleep(1000)
         project = null
-   //     FileUtils.deleteDirectory(workingDirectory)
+        FileUtils.deleteDirectory(workingDirectory)
     }
 
     protected void applyExtraGradle(String string) {
@@ -82,5 +82,12 @@ abstract class AbstractIntegrationTest {
         props.load(new FileInputStream(new File(TestUtils.getPluginBaseDir(), "../version.properties")))
         def versionPlugin = props.getProperty('version')
         versionPlugin
+    }
+
+
+    protected String getTestVersion(){
+        Properties props = new Properties()
+        props.load(new FileInputStream(project.file("version.properties")))
+        return props.getProperty('version')
     }
 }
