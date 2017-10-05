@@ -24,6 +24,6 @@ asciidoctor {
             toc: 'left',
             idprefix: '',
             idseparator: '-',
-            version: "${prop.getProperty(versionKey)}",
+            version: "${prop.getProperty('version')}",
             generationDate: "${new Date()}"
 }

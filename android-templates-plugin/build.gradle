@@ -19,3 +19,27 @@ dependencies {
 test {
     workingDir project.projectDir.getParentFile()
 }
+
+
+
+
+delivery{
+    flows{
+        documentation{
+            step 'documentation', 'Generate documentation'
+            task 'createDoc', true
+            add 'android-templates-doc/html/.'
+        }
+
+    }
+}
+
+
+task('createDoc', dependsOn: project(':android-templates-doc').getTasksByName('asciidoctor', false))
+
+
+project.afterEvaluate({
+    def docFlow = tasks.findByPath('documentationFlow')
+    tasks.findByPath('releaseGitStepCommitVersionFiles').dependsOn += docFlow
+    docFlow.mustRunAfter tasks.findByPath('releaseGitStepGenerateVersionFiles')
+})

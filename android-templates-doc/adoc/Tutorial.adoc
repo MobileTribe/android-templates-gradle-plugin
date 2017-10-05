@@ -1,5 +1,7 @@
 include::./Header.adoc[]
 
+# Android template
+v{version}, {generationDate}
 
 ## Create a template
 
