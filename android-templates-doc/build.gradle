@@ -1,0 +1,29 @@
+
+plugins {
+    id 'org.asciidoctor.convert' version '1.5.3'
+}
+
+asciidoctorj {
+    version = '1.5.4'
+}
+
+def prop = ant {
+    property(file:'../version.properties')
+}
+
+asciidoctor {
+    logDocuments true
+    options doctype: 'book', ruby: 'erubis'
+    sourceDir './adoc/'
+    separateOutputDirs false
+    sources {
+        include 'Tutorial.adoc'
+    }
+    outputDir './html/'
+    attributes 'source-highlighter': 'coderay',
+            toc: 'left',
+            idprefix: '',
+            idseparator: '-',
+            version: "${prop.getProperty('version')}",
+            generationDate: "${new Date()}"
+}

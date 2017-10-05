@@ -1,0 +1,57 @@
+include::./Header.adoc[]
+
+# Android template
+v{version}, {generationDate}
+
+## Create a template
+
+
+### Configure templates extension
+
+Once the plugin applied on your project, you can configure the template extension
+
+[source,groovy]
+----
+include::{pluginTestDir}groovy/com/leroymerlin/plugins/test/TemplatesPluginTest.groovy[tags=template]
+----
+
+### Build it
+
+To build your template, you can use one of those gradle functions :
+
+- *zipTemplates* - to create a zip file with your templates
+- *installTemplates* - to install the zipFile in your android studio
+- *uninstallTemplates* - to uninstall the templates from your computer
+
+NOTE: if your android studio installation is not at a standard location, you can set
+the installation path with environment variable *ANDROID_STUDIO_HOME*
+
+### Publish with delivery
+
+If you want to share your templates with your team, you can use https://github.com/MobileTribe/delivery-gradle-plugin[Delivery plugin]
+to publish it to a directory / ftp / repository / ...
+
+Here is a basic example
+
+[source,groovy]
+----
+include::{pluginTestDir}resources/android/build.gradle[tags=delivery]
+----
+
+For more details see https://github.com/MobileTribe/delivery-gradle-plugin[Delivery plugin documentation]
+
+
+## Use your template
+
+
+To use a published template, you have to apply the plugin on your project and then, add the template dependency
+
+For example with a maven template
+[source,groovy]
+----
+dependencies {
+    template 'com.leroymerlin.templates:mytemplates:1.0.0'
+}
+----
+
+NOTE: Each time you install a new template, Android Studio needs to be restarted in order to apply it.

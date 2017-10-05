@@ -1,0 +1,68 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.leroymerlin.plugins:android-templates-plugin:${System.getProperty("PLUGIN_VERSION")}"
+        classpath "com.leroymerlin.plugins:delivery-plugin:3.0.0-BETA11"
+        classpath "com.leroymerlin.pandroid:pandroid-plugin:2.4.1"
+        classpath 'com.android.tools.build:gradle:2.3.3'
+
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.leroymerlin.android-templates'
+apply plugin: 'com.leroymerlin.pandroid'
+apply plugin: 'com.leroymerlin.delivery'
+
+
+
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        applicationId "com.leroymerlin.templates"
+        minSdkVersion 19
+        targetSdkVersion 25
+    }
+    buildTypes {
+        all {
+            minifyEnabled false
+        }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+}
+
+if (file('extra.gradle').exists()) {
+    apply from: 'extra.gradle'
+}
+
+//tag::delivery[]
+def zipTemplatesTask = project.tasks.getByName("zipTemplates")
+task buildTemplate(type: DeliveryBuild, dependsOn: zipTemplatesTask) {
+    variantName = templates.templatesName
+    outputFiles = ["templates": zipTemplatesTask.outputs.files.singleFile]
+}
+//end::delivery[]

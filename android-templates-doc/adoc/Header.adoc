@@ -1,0 +1,7 @@
+:sourcesDir: ./../../
+:pluginDir: {sourcesDir}android-templates-plugin/
+:pluginTestDir: {pluginDir}src/test/
+:numbered:
+:toc: left
+
+:github: https://github.com/MobileTribe/android-templates/tree/master///
