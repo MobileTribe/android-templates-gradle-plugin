@@ -75,20 +75,23 @@ class TemplateCreatorTask extends DefaultTask {
         writeRecipe()
         writeTemplate()
 
-        javaFiles?.each { copyFile(it, new File(outputDir, "root/src/app_package/" + it.name + ".ftl")) }
+        javaFiles?.each {
+            def file = new File(outputDir, "root/src/app_package/" + it.name + ".ftl")
+            createFoldersAndCopyFile(it, file)
+        }
 
         resFiles?.each {
             if (it.name.contains("AndroidManifest")) {
-                copyFile(it, new File(outputDir, "root/AndroidManifest.xml.ftl"))
+                createFoldersAndCopyFile(it, new File(outputDir, "root/AndroidManifest.xml.ftl"))
             } else {
                 def resFolder = it.parentFile
-                copyFile(it, new File(outputDir, "root/" + resFolder.parentFile.name + "/" + resFolder.name + "/" + it.name + ".ftl"))
+                createFoldersAndCopyFile(it, new File(outputDir, "root/" + resFolder.parentFile.name + "/" + resFolder.name + "/" + it.name + ".ftl"))
             }
         }
     }
 
 
-    private String replaceString(String name) {
+    String replaceString(String name) {
         replaceMap.each {
             name = escapePackage(name.replaceAll(it.value, '\\$\\{' + it.key + '\\}'))
         }
@@ -96,7 +99,7 @@ class TemplateCreatorTask extends DefaultTask {
     }
 
 
-    private static String escapePackage(String name) {
+    static String escapePackage(String name) {
         return name.replaceAll(/import com.leroymerlin.pandroid.demo.([^;]+);/) {
             all, className ->
                 '''
@@ -107,12 +110,12 @@ import ${applicationPackage}.''' + className + ''';
         }
     }
 
-    private void copyFile(File from, File to) {
+    void createFoldersAndCopyFile(File from, File to) {
         to.parentFile.mkdirs()
         to << replaceString(from.text)
     }
 
-    private void writeRecipe() {
+    void writeRecipe() {
         def xml = {
             recipe() {
                 String openFile;
@@ -142,7 +145,7 @@ import ${applicationPackage}.''' + className + ''';
     }
 
 
-    private void writeTemplate() {
+    void writeTemplate() {
         def xml = {
             template(format: '5',
                     revision: project.version,
@@ -171,7 +174,7 @@ import ${applicationPackage}.''' + className + ''';
         writeFile('template.xml', xml)
     }
 
-    private void writeGlobals() {
+    void writeGlobals() {
         def xml = {
             globals() {
                 parametersContainer.findAll { !it.label }.each {
@@ -184,7 +187,7 @@ import ${applicationPackage}.''' + className + ''';
     }
 
 
-    private void writeFile(String path, Closure closure) {
+    void writeFile(String path, Closure closure) {
         def builder = new StreamingMarkupBuilder()
         builder.encoding = "UTF-8"
         new File(getOutputDir(), path) << XmlUtil.serialize(
