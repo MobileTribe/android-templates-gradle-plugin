@@ -15,7 +15,11 @@ Android templates is a gradle plugin that help you generate Android Studio templ
 
 ## Roadmap
 
-### *1.0.2* - (2017-08-04)
+### *1.0.3* - (2017-10-30)
+*Fix*
+- Crash if android studio not found
+
+### *1.0.2* - (2017-10-30)
 *Fix*
 - Windows compatibility
 
