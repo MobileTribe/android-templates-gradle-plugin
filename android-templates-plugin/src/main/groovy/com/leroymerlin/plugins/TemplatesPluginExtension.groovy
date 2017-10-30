@@ -9,6 +9,7 @@ class TemplatesPluginExtension {
 
     Project project
     String templatesName
+    boolean autoUpdate = true
 
     String getTemplatesName() {
         if(templatesName){
