@@ -79,12 +79,18 @@ class TemplatesPlugin implements Plugin<Project> {
 
 
         project.afterEvaluate {
-            if (templatesExtension.autoUpdate) {
-                project.configurations.template.resolve().each {
-                    def prop = getTemplatesProperties(it);
-                    installTemplates(prop.getProperty("name"), it, prop.getProperty("version"))
+            try {
+                if (templatesExtension.autoUpdate) {
+                    findAndroidStudioFolder()
+                    project.configurations.template.resolve().each {
+                        def prop = getTemplatesProperties(it);
+                        installTemplates(prop.getProperty("name"), it, prop.getProperty("version"))
+                    }
                 }
+            } catch (Exception e) {
+                logger.warn("Template plugin can't install your templates", e)
             }
+
 
             if (project.tasks.findByName('build')) {
                 project.tasks.getByName("build").dependsOn += zipAllTask
@@ -141,8 +147,8 @@ class TemplatesPlugin implements Plugin<Project> {
                 }
                 project.logger.warn("$name templates have been installed. You have to restart Android Studio to use them.")
             }
-        }else{
-            project.logger.warn("Template plugin can't write in your android studio template folder ${outputDir.parentFile.absolutePath}. Fix it to install templates" )
+        } else {
+            project.logger.warn("Template plugin can't write in your android studio template folder ${outputDir.parentFile.absolutePath}. Fix it to install templates")
         }
     }
 
