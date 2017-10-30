@@ -8,13 +8,20 @@ ifdef::env-github[:htmlPath: http://mobiletribe.github.io/android-templates-grad
 image:https://api.bintray.com/packages/mobiletribe/maven/com.leroymerlin.plugins:android-templates-plugin/images/download.svg[link="https://bintray.com/mobiletribe/maven/com.leroymerlin.plugins:android-templates-plugin/_latestVersion"] image:http://img.shields.io/badge/license-ASF2-blue.svg["Apache License 2", link="http://www.apache.org/licenses/LICENSE-2.0.txt"]
 
 
-
 ## Note
 
 Android templates is a gradle plugin that help you generate Android Studio template file from source code
 
 
 ## Roadmap
+
+### *1.0.2* - (2017-08-04)
+*Fix*
+- Windows compatibility
+
+### *1.0.1* - (2017-08-04)
+*Fix*
+- Gradle 4.x compatibility
 
 ### *1.0.0* - (2017-08-04)
 

@@ -46,7 +46,7 @@ class TemplatesPlugin implements Plugin<Project> {
 
 
         def uninstallTemplatesTask = project.task("uninstallTemplates", group: GROUP).doLast {
-            if (!project.tasks.withType(TemplateCreatorTask).isEmpty()){
+            if (!project.tasks.withType(TemplateCreatorTask).isEmpty()) {
                 uninstallTemplates(templatesExtension.templatesName)
             }
             project.configurations.template.resolve().each {
@@ -69,13 +69,23 @@ class TemplatesPlugin implements Plugin<Project> {
 
         project.configurations.template.dependencies.all {
             dependency ->
+                dependency.transitive = false
                 //we force zip as an extension
                 dependency.artifacts.each { art ->
                     art.extension = "zip"
                 }
         }
 
+
+
         project.afterEvaluate {
+            if (templatesExtension.autoUpdate) {
+                project.configurations.template.resolve().each {
+                    def prop = getTemplatesProperties(it);
+                    installTemplates(prop.getProperty("name"), it, prop.getProperty("version"))
+                }
+            }
+
             if (project.tasks.findByName('build')) {
                 project.tasks.getByName("build").dependsOn += zipAllTask
             }
@@ -100,20 +110,40 @@ class TemplatesPlugin implements Plugin<Project> {
 
     def installTemplates(String name, File file, String version) {
         def outputDir = new File(findAndroidStudioFolder(), "$name")
-        def zip = new ZipFile(file)
-        zip.entries().each {
-            if (!it.isDirectory()) {
-                def fOut = new File(outputDir, it.name)
-                //create output dir if not exists
-                fOut.parentFile.mkdirs()
-                def fos = new FileOutputStream(fOut)
-                def buf = new byte[it.size]
-                def len = zip.getInputStream(it).read(buf)
-                fos.write(buf, 0, len)
-                fos.close()
-            }
+        def outVersion = new File(outputDir, "templates.properties")
+        boolean shouldOverride = true;
+        if (!version.endsWith("SNAPSHOT") && outVersion.exists()) {
+            def prop = new Properties()
+            prop.load(outVersion.newInputStream())
+            shouldOverride = !version.equals(prop.get("version"))
         }
-        project.logger.warn("$name templates have been installed. You have to restart Android Studio to use them.")
+        if (!outputDir.exists())
+            outputDir.mkdirs()
+        if (outputDir.canWrite()) {
+
+
+            if (shouldOverride) {
+                def zip = new ZipFile(file)
+                zip.entries().each {
+                    if (!it.isDirectory()) {
+                        def fOut = new File(outputDir, it.name)
+                        //create output dir if not exists
+                        fOut.parentFile.mkdirs()
+                        if (fOut.exists())
+                            fOut.delete()
+                        fOut.createNewFile()
+                        def fos = new FileOutputStream(fOut)
+                        def buf = new byte[it.size]
+                        def len = zip.getInputStream(it).read(buf)
+                        fos.write(buf, 0, len)
+                        fos.close()
+                    }
+                }
+                project.logger.warn("$name templates have been installed. You have to restart Android Studio to use them.")
+            }
+        }else{
+            project.logger.warn("Template plugin can't write in your android studio template folder ${outputDir.parentFile.absolutePath}. Fix it to install templates" )
+        }
     }
 
     static File findAndroidStudioFolder() throws FileNotFoundException {
@@ -142,13 +172,18 @@ class TemplatesPlugin implements Plugin<Project> {
             androidStudioHome = new File("/Applications/Android Studio.app")
         }
 
-        if (androidStudioHome)
-            androidStudioHome = new File(androidStudioHome, "Contents/plugins/android/lib/templates")
+        if (androidStudioHome) {
+            def tmp = new File(androidStudioHome, "Contents")
+            if (tmp.exists()) //Mac os path
+                androidStudioHome = tmp;
+            androidStudioHome = new File(androidStudioHome, "plugins/android/lib/templates")
+        }
+
 
         if (androidStudioHome?.exists()) {
             return androidStudioHome
         } else {
-            throw new FileNotFoundException("Can't find Android Studio directory. Please add the path to ANDROID_STUDIO_HOME environment variable")
+            throw new FileNotFoundException("Can't find Android Studio template directory in ${androidStudioHome.absolutePath}. Please add the path to ANDROID_STUDIO_HOME environment variable")
         }
 
 
