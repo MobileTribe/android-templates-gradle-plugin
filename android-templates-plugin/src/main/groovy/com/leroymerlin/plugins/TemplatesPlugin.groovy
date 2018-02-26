@@ -88,7 +88,7 @@ class TemplatesPlugin implements Plugin<Project> {
                     }
                 }
             } catch (Exception e) {
-                logger.warn("Template plugin can't install your templates", e)
+                project.logger.warn("Template plugin can't install your templates", e)
             }
 
 
